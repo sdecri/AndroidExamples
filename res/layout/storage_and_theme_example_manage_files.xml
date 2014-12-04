@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/storage_and_theme_manageFiles_linearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <CheckedTextView
+        android:id="@+id/storage_and_theme_manaFiles_checkbox_selectAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checkMark="@android:drawable/checkbox_off_background"
+        android:text="@string/selectAll"
+        android:textSize="30sp" 
+        android:gravity="center_vertical"/>
+
+    <ListView
+        android:id="@+id/ListView_storage_and_theme"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ManageFileActivity" >
+    </ListView>
+
+</LinearLayout>

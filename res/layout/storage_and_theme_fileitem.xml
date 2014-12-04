@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    
+        <CheckedTextView
+            android:id="@+id/storage_and_theme_fileItem_listitem_checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:checkMark="@android:drawable/checkbox_off_background"
+            android:clickable="false"
+            android:focusable="false"
+            android:textSize="20sp" />
+        
+</LinearLayout>

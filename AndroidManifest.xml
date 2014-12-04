@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.androidexamples"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="18" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.androidexamples.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.androidexamples.fragment_example.JanusActivity"
+            android:label="@string/title_activity_janus"
+            android:parentActivityName="com.example.androidexamples.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.androidexamples.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.androidexamples.fragment_example.BodyActivity"
+            android:label="@string/title_activity_body"
+            android:parentActivityName="com.example.androidexamples.fragment_example.JanusActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.androidexamples.fragment_example.JanusActivity" />
+        </activity>
+        <activity
+            android:name="com.example.androidexamples.dialog_fragment.DialogChoiceActivity"
+            android:label="@string/title_activity_dialog_choice"
+            android:parentActivityName="com.example.androidexamples.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.androidexamples.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.androidexamples.storage_and_theme.StorageAndThemeActivity"
+            android:label="@string/title_activity_storage_and_theme"
+            android:parentActivityName="com.example.androidexamples.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.androidexamples.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.androidexamples.storage_and_theme.ManageFileActivity"
+            android:label="@string/title_activity_manage_file"
+            android:parentActivityName="com.example.androidexamples.storage_and_theme.StorageAndThemeActivity"
+            android:theme="@style/AppAlternativeTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.androidexamples.storage_and_theme.StorageAndThemeActivity" />
+        </activity>
+        <activity
+            android:name="com.example.androidexamples.sqlite.SqliteActivity"
+            android:label="@string/title_activity_sqlite" android:parentActivityName="com.example.androidexamples.MainActivity">
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SqliteActivity" >
+
+    <fragment
+        android:id="@+id/fragment1"
+        android:name="com.example.androidexamples.sqlite.ContactFormFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        class="com.example.androidexamples.sqlite.ContactFormFragment" />
+
+    <fragment
+        android:id="@+id/fragment2"
+        android:name="com.example.androidexamples.sqlite.ContactFoundFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        class="com.example.androidexamples.sqlite.ContactFoundFragment" />
+
+ 
+<!--      <fragment
+        class="com.example.androidexamples.fragment_example.MenuFragment"
+        android:id="@+id/fragment_menu_port"
+        android:name="com.example.androidexamples.fragment_example.MenuFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        />
+ --> 
+ 
+</LinearLayout>

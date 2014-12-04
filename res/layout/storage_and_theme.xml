@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context=".StorageAndTheme" >
+
+    <TextView
+        android:id="@+id/textView_currentFileName"
+        style="@style/myText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save" 
+            style="@style/myButtonText"
+            android:background="@drawable/button_red"
+            />
+
+        <Button
+            android:id="@+id/button_saveAs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/saveAs" 
+            style="@style/myButtonText"
+            android:background="@drawable/button_green"
+            />
+        
+        <Button
+            android:id="@+id/button_load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/load" 
+            style="@style/myButtonText"
+            android:background="@drawable/button_blue"
+            />
+
+		<Button
+            android:id="@+id/button_ManageFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/manage" 
+            style="@style/myButtonText"
+            android:background="@drawable/button_yellow"
+            />
+        
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/TextArea_fileContent"
+        style="@style/myEditText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+</LinearLayout>

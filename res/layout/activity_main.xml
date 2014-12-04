@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <Button
+        android:id="@+id/button_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog" />
+
+    <Button
+        android:id="@+id/button_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment" />
+
+    <Button
+        android:id="@+id/button_storageAndTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/storageAndTheme" />
+
+    <Button
+        android:id="@+id/button_sqlite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sqlite" />
+
+</LinearLayout>
