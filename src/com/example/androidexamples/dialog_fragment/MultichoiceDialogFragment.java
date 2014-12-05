@@ -7,16 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.androidexamples.R;
-import com.example.androidexamples.fragment_example.MenuFragment.MenuFragmentListener;
 import com.example.androidexamples.fragment_example.support.Contact;
 
-import android.R.integer;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
-import android.content.res.Resources;
-import android.nfc.FormatException;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
@@ -99,7 +95,7 @@ public class MultichoiceDialogFragment extends DialogFragment implements DialogI
 		try {
 			owner=(onMultichoiceDialogFragmentListener) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement onMultichoiceDialogFragmentListener");
+			throw new ClassCastException(activity.toString() + " must implement " + onMultichoiceDialogFragmentListener.class.getSimpleName());
 		}
 	};
 	

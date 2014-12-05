@@ -7,7 +7,6 @@ import com.example.androidexamples.storage_and_theme.StorageAndThemeActivity;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.view.Menu;

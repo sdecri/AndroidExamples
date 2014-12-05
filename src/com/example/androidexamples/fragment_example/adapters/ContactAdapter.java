@@ -9,13 +9,17 @@ import java.util.List;
 import com.example.androidexamples.R;
 import com.example.androidexamples.fragment_example.support.Contact;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.QuickContactBadge;
 
 /**
  * @author Simone
@@ -25,7 +29,8 @@ public class ContactAdapter extends BaseAdapter {
 
 	//ATTRIBUTES
 	private List<Contact> list_contacts;
-	private LayoutInflater mInflater;
+	private LayoutInflater layoutInflater;
+	private Resources res;
 	
 	//CONSTRUCTORS
 	public ContactAdapter(Context context, Contact[] contacts) {
@@ -33,7 +38,8 @@ public class ContactAdapter extends BaseAdapter {
 		this.list_contacts = new ArrayList<Contact>(contacts.length);
 		for (int i=0;i<contacts.length;i++)
 			this.list_contacts.add(contacts[i]);
-		mInflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		layoutInflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		res=context.getResources();
 	}
 	
 	/* (non-Javadoc)
@@ -81,18 +87,21 @@ public class ContactAdapter extends BaseAdapter {
 	/* (non-Javadoc)
 	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */
+	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewInAdapter viewInAdapter=null;
 		if(convertView==null) {
-			convertView=(LinearLayout) mInflater.inflate(R.layout.fragment_example_listitem, null);			
+			convertView=(LinearLayout) layoutInflater.inflate(R.layout.fragment_example_listitem, null);			
 			viewInAdapter = new ViewInAdapter();
 	        viewInAdapter.button_contact =(Button) convertView.findViewById(R.id.listItem_button);
+	        viewInAdapter.imageView=(ImageView) convertView.findViewById(R.id.listitem_image);
 	        convertView.setTag(viewInAdapter);
 		}else {
 			viewInAdapter=(ViewInAdapter) convertView.getTag();
 		}
 		viewInAdapter.button_contact.setText(list_contacts.get(position).getFirstName() + " " + list_contacts.get(position).getLastName());
+		viewInAdapter.imageView.setImageDrawable(res.getDrawable(R.drawable.squal));
 		return convertView;
 		
 		/*
@@ -116,5 +125,6 @@ public class ContactAdapter extends BaseAdapter {
 	 */
 	private class ViewInAdapter{
 		public Button button_contact;
+		public ImageView imageView;
 	}
 }
