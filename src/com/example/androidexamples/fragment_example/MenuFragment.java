@@ -75,7 +75,7 @@ public class MenuFragment extends Fragment implements OnItemClickListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		
 		//assign the xml layout to the fragment
-		View view = inflater.inflate(R.layout.fragment_example_fr_menu,container,false);
+		View view = inflater.inflate(R.layout.fragment_listview,container,false);
 
 //		//get the linear layoout that represent the container of the list of contacts
 //		linearLayout_contatcList=(LinearLayout)view.findViewById(R.id.LinearLayout_frag_menu);
@@ -90,7 +90,7 @@ public class MenuFragment extends Fragment implements OnItemClickListener{
 			e.printStackTrace();
 		}
 				
-		ListView listView=(ListView) view.findViewById(R.id.ListView_fragment_menu);
+		ListView listView=(ListView) view.findViewById(R.id.listview_fragment_listview);
 		listView.setAdapter(new ContactAdapter(view.getContext(), contacts));
 		listView.setOnItemClickListener(this);
 		

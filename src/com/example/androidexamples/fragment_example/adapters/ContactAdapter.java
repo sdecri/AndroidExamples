@@ -19,7 +19,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.QuickContactBadge;
 
 /**
  * @author Simone
@@ -92,7 +91,7 @@ public class ContactAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewInAdapter viewInAdapter=null;
 		if(convertView==null) {
-			convertView=(LinearLayout) layoutInflater.inflate(R.layout.fragment_example_listitem, null);			
+			convertView=(LinearLayout) layoutInflater.inflate(R.layout.fragment_example_listitem,parent, false);			
 			viewInAdapter = new ViewInAdapter();
 	        viewInAdapter.button_contact =(Button) convertView.findViewById(R.id.listItem_button);
 	        viewInAdapter.imageView=(ImageView) convertView.findViewById(R.id.listitem_image);
