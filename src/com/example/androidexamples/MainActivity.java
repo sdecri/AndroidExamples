@@ -3,6 +3,7 @@ package com.example.androidexamples;
 import com.example.androidexamples.contacts.ContactActivity;
 import com.example.androidexamples.dialog_fragment.DialogChoiceActivity;
 import com.example.androidexamples.fragment_example.JanusActivity;
+import com.example.androidexamples.maps.MapActivityExample;
 import com.example.androidexamples.sqlite.SqliteActivity;
 import com.example.androidexamples.storage_and_theme.StorageAndThemeActivity;
 
@@ -25,6 +26,7 @@ public class MainActivity extends Activity implements OnClickListener{
 	private Button button_storageAndTheme;
 	private Button button_sqlite;
 	private Button button_contacts;
+	private Button button_map;
 
 	
 	@Override
@@ -42,8 +44,10 @@ public class MainActivity extends Activity implements OnClickListener{
 		button_storageAndTheme.setOnClickListener(this);
 		button_sqlite=(Button) findViewById(R.id.button_sqlite);
 		button_sqlite.setOnClickListener(this);
-		button_contacts=(Button) findViewById(R.id.button_contacts);
-		button_contacts.setOnClickListener(this);
+        button_contacts=(Button) findViewById(R.id.button_contacts);
+        button_contacts.setOnClickListener(this);
+        button_map=(Button) findViewById(R.id.button_map);
+        button_map.setOnClickListener(this);
 
 	}
 
@@ -77,12 +81,15 @@ public class MainActivity extends Activity implements OnClickListener{
 			Intent intent=new Intent(this,SqliteActivity.class);
 			intent.putExtra("example", "sqlite");
 			startActivity(intent);
-		}else if(v==button_contacts) {
-			Intent intent=new Intent(this,ContactActivity.class);
-			intent.putExtra("example", res.getString(R.string.contacts));
-			startActivity(intent);
-		}
-
+        }else if(v==button_contacts) {
+            Intent intent=new Intent(this,ContactActivity.class);
+            intent.putExtra("example", res.getString(R.string.contacts));
+            startActivity(intent);
+        }else if(v==button_map) {
+            Intent intent=new Intent(this,MapActivityExample.class);
+            intent.putExtra("example", res.getString(R.string.map));
+            startActivity(intent);
+        }
 		
 	}
 

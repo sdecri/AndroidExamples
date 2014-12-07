@@ -57,5 +57,6 @@
     <string name="searchContacts">Search contacts</string>
     <string name="search">Search</string>
     <string name="noDataLoaded">No data loaded</string>
+    <string name="map">Map</string>
     
 </resources>

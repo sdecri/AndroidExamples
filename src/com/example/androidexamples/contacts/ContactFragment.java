@@ -31,8 +31,8 @@ import android.widget.SearchView.OnQueryTextListener;
 /**
  * @author Simone 06/dic/2014
  */
-public class ContactFragment extends ListFragment implements OnItemClickListener,OnQueryTextListener, OnCloseListener,
-        LoaderCallbacks<Cursor> {
+public class ContactFragment extends ListFragment implements OnItemClickListener,
+        OnQueryTextListener, OnCloseListener, LoaderCallbacks<Cursor> {
 
     // STATIC ATTRIBUTES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     private static final String[] COLUMNS_CONTACT = new String[] { RawContacts._ID,
@@ -95,7 +95,7 @@ public class ContactFragment extends ListFragment implements OnItemClickListener
 
         // Start out with a progress indicator.
         setListShown(false);
-        
+
         getListView().setOnItemClickListener(this);
 
         // Prepare the loader. Either re-connect with an existing one,
@@ -187,7 +187,10 @@ public class ContactFragment extends ListFragment implements OnItemClickListener
     @Override
     public boolean onClose() {
 
-        return false;
+        if (!TextUtils.isEmpty(mSearchView.getQuery())) {
+            mSearchView.setQuery(null, true);
+        }
+        return true;
     }
 
     /**
@@ -223,10 +226,11 @@ public class ContactFragment extends ListFragment implements OnItemClickListener
     }
 
     /**
-    * {@inheritDoc}
-    */
+     * {@inheritDoc}
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
         caller.onContactSelected((ContactInfo) contactAdapter.getContactInfo(id));
     }
 
