@@ -142,6 +142,7 @@ public final class R {
         public static final int multichoiceDialog=0x7f060011;
         public static final int multichoiceDialogExample=0x7f060012;
         public static final int no=0x7f060014;
+        public static final int noDataLoaded=0x7f060037;
         public static final int noFileLoaded=0x7f060027;
         public static final int noFileToLoad=0x7f060028;
         public static final int noItemSelected=0x7f060018;
@@ -151,6 +152,7 @@ public final class R {
         public static final int save=0x7f06001a;
         public static final int saveAs=0x7f060022;
         public static final int saveAsFileDialogMessage=0x7f060021;
+        public static final int search=0x7f060036;
         public static final int searchContacts=0x7f060035;
         public static final int selectAll=0x7f06002e;
         public static final int selectFile=0x7f060023;

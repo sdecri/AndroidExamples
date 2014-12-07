@@ -55,5 +55,7 @@
     <string name="sqlite">Sqlite</string>
     <string name="contacts">Contacts</string>
     <string name="searchContacts">Search contacts</string>
-
+    <string name="search">Search</string>
+    <string name="noDataLoaded">No data loaded</string>
+    
 </resources>
