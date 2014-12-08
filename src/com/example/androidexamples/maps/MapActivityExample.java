@@ -1,9 +1,23 @@
 package com.example.androidexamples.maps;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.androidexamples.R;
-import com.google.android.maps.MapActivity;
-
+import com.example.utils.location.LocationGetter;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Map.java
@@ -11,28 +25,128 @@ import com.google.android.maps.MapActivity;
 
 /**
  * @author Simone
- * 07/dic/2014
+ *         07/dic/2014
  */
-public class MapActivityExample extends MapActivity {
+public class MapActivityExample extends Activity {
+
+    private static final String NEWLINE = System.getProperty("line.separator");
+
+    // ATTRIBUTES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    private GoogleMap map;
+    private LocationManager locationManager;
+    private LocationProvider locationProviderGPS;
+    private LocationProvider locationProviderNETWORK;
+    private MyLocationGetter locationGetter;
+    private Marker markerCurrentLocation;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean isRouteDisplayed() {
-
-        return false;
-    }
-
-    
-    /**
-    * {@inheritDoc}
-    */
-    @Override
     protected void onCreate(Bundle arg0) {
-    
+
         super.onCreate(arg0);
-        
-        setContentView(R.layout.fragment_map);
+
+        setContentView(R.layout.activity_map);
+
+        map =
+                ((MapFragment) getFragmentManager()
+                        .findFragmentById(R.id.activity_map_fragment_map)).getMap();
+
+        // get the old registered location
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        // Get the location provider
+        locationProviderGPS = locationManager.getProvider(LocationManager.GPS_PROVIDER);
+        locationProviderNETWORK = locationManager.getProvider(LocationManager.NETWORK_PROVIDER);
+
+        if (locationProviderGPS == null && locationProviderNETWORK == null) {
+            new AlertDialog.Builder(this)
+                    .setTitle("ERROR")
+                    .setMessage("No GPS or Network availability to define current location on map!")
+                    .setNeutralButton(getResources().getString(R.string.ok), null);
+        }
+        else {
+            if (!locationManager.isProviderEnabled(locationProviderGPS.getName())
+                    && !locationManager.isProviderEnabled(locationProviderNETWORK.getName())) {
+                new AlertDialog.Builder(this).setTitle("ERROR")
+                        .setMessage("GPS and Network disabled")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setNeutralButton(getResources().getString(R.string.ok), null).show();
+
+            }
+            else if (!locationManager.isProviderEnabled(locationProviderGPS.getName())) {
+                new AlertDialog.Builder(this).setTitle("ERROR").setMessage("GPS disabled")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setNeutralButton(getResources().getString(R.string.ok), null).show();
+            }
+            else if (!locationManager.isProviderEnabled(locationProviderNETWORK.getName())) {
+                new AlertDialog.Builder(this).setTitle("ERROR").setMessage("Network disabled")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setNeutralButton(getResources().getString(R.string.ok), null).show();
+            }
+
+        }
+
+        locationGetter =
+                new MyLocationGetter(this, locationManager, 2, 0, locationProviderNETWORK,
+                        locationProviderGPS);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStop() {
+
+        locationGetter.stopUpdatingLocation();
+        super.onStop();
+    }
+
+    private class MyLocationGetter extends LocationGetter {
+
+        Context context;
+
+        /**
+         * 
+         * @param locationManager
+         * @param minTime
+         * @param minDistance
+         * @param locationProviders
+         */
+        public MyLocationGetter(Context context, LocationManager locationManager, int minTime,
+                int minDistance, LocationProvider... locationProviders) {
+
+            super(locationManager, minTime, minDistance, locationProviders);
+            this.context = context;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onBetterLocationObtained(Location location) {
+
+//            Toast.makeText(
+//                    context,
+//                    "New position acquired from " + location.getProvider() + "." + NEWLINE
+//                            + " Location: Lon = " + location.getLongitude() + "; Lat = "
+//                            + location.getLatitude(), Toast.LENGTH_SHORT).show();
+            // add a marker
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            if (markerCurrentLocation == null) {
+                markerCurrentLocation =
+                        map.addMarker(new MarkerOptions().position(latLng)
+                                .title("Point from: " + location.getProvider())
+                                .snippet(latLng.longitude + ", " + latLng.latitude));
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
+                map.animateCamera(cameraUpdate);
+            }else{
+                markerCurrentLocation.setTitle("Point from: " + location.getProvider());
+                markerCurrentLocation.setPosition(latLng);
+            }
+        }
+
+    }
+
 }

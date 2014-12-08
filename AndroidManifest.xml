@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--
      The following two permissions are not required to use
-     Google Maps Android API v2, but are recommended to obtain user location
+     Google Maps Android API v2, but are recommended to obtain user location
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -42,7 +42,7 @@
         	Google play service getting started
         		https://developers.google.com/maps/documentation/android/start#install_and_configure_the_google_play_services_sdk
         	Setting google play service
-        		http://developer.android.com/google/play-services/setup.html
+        		http://developer.android.com/google/play-services/setup.html
         -->
         <!-- ###################################################### -->
         <!-- Google play service -->

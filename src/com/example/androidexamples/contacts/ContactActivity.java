@@ -28,7 +28,7 @@ public class ContactActivity extends Activity implements Comunicable {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.contact_activity);
+        setContentView(R.layout.activity_contact);
 
         if (getIntent() != null && getIntent().getExtras() != null)
             Toast.makeText(
