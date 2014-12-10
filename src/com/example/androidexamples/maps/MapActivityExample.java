@@ -7,6 +7,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.androidexamples.R;
@@ -14,10 +17,13 @@ import com.example.utils.location.LocationGetter;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
  * Map.java
@@ -27,7 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * @author Simone
  *         07/dic/2014
  */
-public class MapActivityExample extends Activity {
+public class MapActivityExample extends Activity implements OnMyLocationButtonClickListener {
 
     private static final String NEWLINE = System.getProperty("line.separator");
 
@@ -37,7 +43,14 @@ public class MapActivityExample extends Activity {
     private LocationProvider locationProviderGPS;
     private LocationProvider locationProviderNETWORK;
     private MyLocationGetter locationGetter;
-    private Marker markerCurrentLocation;
+    private Polyline polyline;
+    private LatLng polyLastPoint;
+
+    // private Marker markerCurrentLocation;
+
+    // GUI <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+    // METHODS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     /**
      * {@inheritDoc}
@@ -52,6 +65,10 @@ public class MapActivityExample extends Activity {
         map =
                 ((MapFragment) getFragmentManager()
                         .findFragmentById(R.id.activity_map_fragment_map)).getMap();
+
+        map.setMyLocationEnabled(true);// to enable myLocationButton layer
+        map.getUiSettings().setZoomControlsEnabled(false);
+        map.setOnMyLocationButtonClickListener(this);
 
         // get the old registered location
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -99,13 +116,32 @@ public class MapActivityExample extends Activity {
     @Override
     protected void onStop() {
 
-        locationGetter.stopUpdatingLocation();
+        // locationGetter.stopUpdatingLocation();
         super.onStop();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean onMyLocationButtonClick() {
+
+        Location location = locationGetter.getBetterLocation();
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        zoomToLocation(latLng);
+        return true;
+    }
+
+    private void zoomToLocation(LatLng latLng) {
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
+        map.animateCamera(cameraUpdate);
+    }
+
+    // INNER CLASS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     private class MyLocationGetter extends LocationGetter {
 
-        Context context;
+        private boolean firstLoad;
 
         /**
          * 
@@ -118,7 +154,7 @@ public class MapActivityExample extends Activity {
                 int minDistance, LocationProvider... locationProviders) {
 
             super(locationManager, minTime, minDistance, locationProviders);
-            this.context = context;
+            firstLoad = true;
         }
 
         /**
@@ -127,24 +163,34 @@ public class MapActivityExample extends Activity {
         @Override
         public void onBetterLocationObtained(Location location) {
 
-//            Toast.makeText(
-//                    context,
-//                    "New position acquired from " + location.getProvider() + "." + NEWLINE
-//                            + " Location: Lon = " + location.getLongitude() + "; Lat = "
-//                            + location.getLatitude(), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(
+            // context,
+            // "New position acquired from " + location.getProvider() + "." + NEWLINE
+            // + " Location: Lon = " + location.getLongitude() + "; Lat = "
+            // + location.getLatitude(), Toast.LENGTH_SHORT).show();
             // add a marker
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            if (markerCurrentLocation == null) {
-                markerCurrentLocation =
-                        map.addMarker(new MarkerOptions().position(latLng)
-                                .title("Point from: " + location.getProvider())
-                                .snippet(latLng.longitude + ", " + latLng.latitude));
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
-                map.animateCamera(cameraUpdate);
+            if(true){//track position
+                //todo_here
             }else{
-                markerCurrentLocation.setTitle("Point from: " + location.getProvider());
-                markerCurrentLocation.setPosition(latLng);
+                
             }
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            if (firstLoad) {
+                // markerCurrentLocation =
+                // map.addMarker(new MarkerOptions().position(latLng)
+                // .title("Point from: " + location.getProvider())
+                // .snippet(latLng.longitude + ", " + latLng.latitude));
+                zoomToLocation(latLng);
+            }
+            else {
+                // markerCurrentLocation.setTitle("Point from: " + location.getProvider());
+                // markerCurrentLocation.setPosition(latLng);
+            }
+            polyline =
+                    map.addPolyline(new PolylineOptions().width(20).add(new LatLng(0, 0))
+                            .add(new LatLng(latLng.latitude, latLng.longitude)));
+
+            firstLoad = false;
         }
 
     }
