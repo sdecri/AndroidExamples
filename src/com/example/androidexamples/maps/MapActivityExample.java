@@ -1,18 +1,24 @@
 package com.example.androidexamples.maps;
 
+import android.R.color;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.Toast;
-
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import com.example.androidexamples.R;
+import com.example.utils.Util;
 import com.example.utils.location.LocationGetter;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,22 +39,32 @@ import com.google.android.gms.maps.model.PolylineOptions;
  * @author Simone
  *         07/dic/2014
  */
-public class MapActivityExample extends Activity implements OnMyLocationButtonClickListener {
+public class MapActivityExample extends Activity implements OnMyLocationButtonClickListener,
+        OnCheckedChangeListener {
 
-    private static final String NEWLINE = System.getProperty("line.separator");
+    // STATIC ATTRIBUTES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // private static final String NEWLINE = System.getProperty("line.separator");
+    private static final int MIN_DIST_TO_DRAWN_POSITION = 5;// m
+    private static final int MIN_ZOOM = 18;
 
     // ATTRIBUTES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    private GoogleMap map;
+    private Resources res;
     private LocationManager locationManager;
     private LocationProvider locationProviderGPS;
     private LocationProvider locationProviderNETWORK;
     private MyLocationGetter locationGetter;
+    private float totalDistance;
+    // GUI <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    private GoogleMap map;
     private Polyline polyline;
-    private LatLng polyLastPoint;
+    private CheckBox checkBox_trackMyPosition;
+    private CheckBox checkBox_myDistance;
+    private TextView textView_travelledDistance;
+    private LinearLayout block_distance;
+    private Marker marker_Start;
+    private RelativeLayout.LayoutParams myLocationButtonLayoutParams;
 
     // private Marker markerCurrentLocation;
-
-    // GUI <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     // METHODS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -62,6 +78,13 @@ public class MapActivityExample extends Activity implements OnMyLocationButtonCl
 
         setContentView(R.layout.activity_map);
 
+        res = getResources();
+        checkBox_trackMyPosition =
+                (CheckBox) findViewById(R.id.activity_map_checkBox_track_position);
+        checkBox_myDistance = (CheckBox) findViewById(R.id.activity_map_checkBox_my_distance);
+        checkBox_myDistance.setOnCheckedChangeListener(this);
+        textView_travelledDistance = (TextView) findViewById(R.id.activity_map_textView_distance);
+        block_distance = (LinearLayout) findViewById(R.id.activity_map_block_distance);
         map =
                 ((MapFragment) getFragmentManager()
                         .findFragmentById(R.id.activity_map_fragment_map)).getMap();
@@ -69,6 +92,18 @@ public class MapActivityExample extends Activity implements OnMyLocationButtonCl
         map.setMyLocationEnabled(true);// to enable myLocationButton layer
         map.getUiSettings().setZoomControlsEnabled(false);
         map.setOnMyLocationButtonClickListener(this);
+
+        // Get the button view
+        View locationButton = findViewById(0x2);
+
+        // and next place it, for exemple, on bottom right (as Google Maps app)
+        myLocationButtonLayoutParams =
+                (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+        // position on right bottom
+        myLocationButtonLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        myLocationButtonLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
+                RelativeLayout.TRUE);
+        myLocationButtonLayoutParams.setMargins(0, 0, 20, 60);
 
         // get the old registered location
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -106,8 +141,8 @@ public class MapActivityExample extends Activity implements OnMyLocationButtonCl
         }
 
         locationGetter =
-                new MyLocationGetter(this, locationManager, 2, 0, locationProviderNETWORK,
-                        locationProviderGPS);
+                new MyLocationGetter(this, locationManager, 2, MIN_DIST_TO_DRAWN_POSITION,
+                        locationProviderNETWORK, locationProviderGPS);
     }
 
     /**
@@ -116,7 +151,7 @@ public class MapActivityExample extends Activity implements OnMyLocationButtonCl
     @Override
     protected void onStop() {
 
-        // locationGetter.stopUpdatingLocation();
+        locationGetter.stopUpdatingLocation();
         super.onStop();
     }
 
@@ -132,10 +167,34 @@ public class MapActivityExample extends Activity implements OnMyLocationButtonCl
         return true;
     }
 
+    // SUPPORT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     private void zoomToLocation(LatLng latLng) {
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
+        int currentZoom = (int) map.getCameraPosition().zoom;
+        CameraUpdate cameraUpdate =
+                CameraUpdateFactory.newLatLngZoom(latLng, currentZoom > MIN_ZOOM ? currentZoom
+                        : MIN_ZOOM);
         map.animateCamera(cameraUpdate);
+    }
+
+    /**
+     * 
+     * @param distance
+     * @return if <code>distance > 1000</code> <b>x km, y m</b>; otherwise <b>x m</b>
+     */
+    private String getFormattedDistance(float distance) {
+
+        int km;
+        int m;
+        String toReturn;
+        if (distance >= 1000) {
+            km = (int) Math.floor(distance / 1000);
+            m = (int) (distance % 1000);
+            toReturn = km + " km, " + m + " m";
+        }
+        else
+            toReturn = "" + (int) distance + " m";
+        return toReturn;
     }
 
     // INNER CLASS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -163,36 +222,72 @@ public class MapActivityExample extends Activity implements OnMyLocationButtonCl
         @Override
         public void onBetterLocationObtained(Location location) {
 
+            LatLng newPoint = new LatLng(location.getLatitude(), location.getLongitude());
+
+            Log.i("My Location", "New Point: Lon = " + newPoint.longitude + "; Lat = "
+                    + newPoint.latitude);
+
             // Toast.makeText(
             // context,
             // "New position acquired from " + location.getProvider() + "." + NEWLINE
             // + " Location: Lon = " + location.getLongitude() + "; Lat = "
             // + location.getLatitude(), Toast.LENGTH_SHORT).show();
             // add a marker
-            if(true){//track position
-                //todo_here
-            }else{
-                
+            if (checkBox_myDistance.isChecked()) {// travelled distance
+                LatLng lastPoint = polyline.getPoints().get(polyline.getPoints().size() - 1);
+                float distance = Util.distance(lastPoint, newPoint);
+                if (distance >= MIN_DIST_TO_DRAWN_POSITION) {
+                    polyline.getPoints().add(newPoint);
+                    totalDistance += distance;
+                }
+                String travelledDistance =
+                        res.getString(R.string.travvelledDistance) + " "
+                                + getFormattedDistance(totalDistance);
+                textView_travelledDistance.setText(travelledDistance);
             }
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            if (firstLoad) {
-                // markerCurrentLocation =
-                // map.addMarker(new MarkerOptions().position(latLng)
-                // .title("Point from: " + location.getProvider())
-                // .snippet(latLng.longitude + ", " + latLng.latitude));
-                zoomToLocation(latLng);
+
+            if (firstLoad || checkBox_trackMyPosition.isChecked())
+                zoomToLocation(newPoint);
+            firstLoad = false;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+        if (buttonView.getId() == R.id.activity_map_checkBox_my_distance) {
+            if (isChecked) {
+                Location currentLocation = map.getMyLocation();
+                LatLng currentPosition =
+                        new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                marker_Start =
+                        map.addMarker(new MarkerOptions()
+                                .position(currentPosition)
+                                .snippet(
+                                        " Location: Lon = " + currentPosition.longitude
+                                                + "; Lat = " + currentPosition.latitude)
+                                .title("Start point"));
+                if (block_distance.getVisibility() != View.VISIBLE)
+                    block_distance.setVisibility(View.VISIBLE);
+                polyline =
+                        map.addPolyline(new PolylineOptions().color(color.holo_blue_bright).add(
+                                currentPosition));
+                textView_travelledDistance.setText(res.getString(R.string.travvelledDistance)
+                        + " 0 m");
+                myLocationButtonLayoutParams.setMargins(0, 0, 20, 60);
             }
             else {
-                // markerCurrentLocation.setTitle("Point from: " + location.getProvider());
-                // markerCurrentLocation.setPosition(latLng);
-            }
-            polyline =
-                    map.addPolyline(new PolylineOptions().width(20).add(new LatLng(0, 0))
-                            .add(new LatLng(latLng.latitude, latLng.longitude)));
+                totalDistance = 0;
+                marker_Start.remove();
+                polyline.remove();
+                block_distance.setVisibility(View.GONE);
+                myLocationButtonLayoutParams.setMargins(0, 0, 20, 20);
 
-            firstLoad = false;
+            }
         }
 
     }
-
 }

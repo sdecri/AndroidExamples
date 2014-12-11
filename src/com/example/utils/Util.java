@@ -7,6 +7,8 @@ import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorDescription;
@@ -17,6 +19,7 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract.Contacts;
@@ -120,4 +123,37 @@ public class Util {
         }
         return null;
     }
+
+    /**
+     * Returns the approximate distance in meters between 
+     * two locations. 
+     * Distance is defined using the WGS84 ellipsoid
+     * @param l1
+     * @param l2
+     * @return
+     */
+    public static float distance(Location l1,Location l2){
+        if(l1==null || l2==null) return 0;
+        return l1.distanceTo(l2);
+    }
+    
+    /**
+     * Returns the approximate distance in meters between 
+     * two locations. 
+     * Distance is defined using the WGS84 ellipsoid
+     * @param point1
+     * @param point2
+     * @return
+     */
+    public static float distance(LatLng point1, LatLng point2){
+        if(point1==null || point2==null) return 0;
+        Location location1=new Location("");
+        location1.setLatitude(point1.latitude);
+        location1.setLongitude(point1.longitude);
+        Location location2=new Location("");
+        location2.setLatitude(point2.latitude);
+        location2.setLongitude(point2.longitude);
+        return location1.distanceTo(location2);
+    }
+    
 }

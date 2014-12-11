@@ -58,5 +58,8 @@
     <string name="search">Search</string>
     <string name="noDataLoaded">No data loaded</string>
     <string name="map">Map</string>
+    <string name="trackMyPosition">Track my position</string>
+    <string name="myDistance">My distance</string>
+    <string name="travvelledDistance">Distance: </string>
     
 </resources>

@@ -20,4 +20,46 @@
         android:background="@drawable/button_round"
         android:src="@android:drawable/ic_menu_mylocation" />
  -->
+
+    <LinearLayout
+        android:id="@+id/activity_map_block_checkboxes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#424242"
+        android:orientation="horizontal"
+        android:alpha="0.65"
+        android:visibility="visible" >
+
+        <CheckBox
+            android:id="@+id/activity_map_checkBox_track_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trackMyPosition" />
+
+        <CheckBox
+            android:id="@+id/activity_map_checkBox_my_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/myDistance" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_map_block_distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:background="#424242"
+        android:alpha="0.65"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/activity_map_textView_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </LinearLayout>
+
 </FrameLayout>
